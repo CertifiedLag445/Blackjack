@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blackjack Game</title>
+  <link rel="stylesheet" href="blackjacksite.css" />
+</head>
+<body>
+  <header>
+    <h1>Blackjack Game</h1>
+    <nav>
+      <button onclick="showTab('game')">Play Blackjack</button>
+      <button id="calculatorBtn" onclick="showTab('calculator')">Strategy Calculator</button>
+    </nav>
+  </header>
+
+  <!-- Game Tab -->
+  <div id="game" class="tab">
+    <h2>Blackjack against the Dealer</h2>
+    <p>Balance: $<span id="currency">10,000</span></p>
+    <button onclick="startGame()">Start New Game</button>
+
+    <div id="gameLayout">
+      <div id="deckArea">
+        <h4>Deck</h4>
+        <div id="deckCard" class="deck-card-container">
+          <div class="deck-card">
+            <div class="card-face card-front">
+              <img src="../PortfolioImages/back_of_card.png" alt="Deck" />
+            </div>
+            <div class="card-face card-back">
+              <img src="../PortfolioImages/back_of_card.png" alt="Deck" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="mainContent">
+        <div id="gameArea" style="display:none;">
+          <div id="dealerArea"></div>
+          <div id="playerArea"></div>
+          <div id="betArea">
+            <label for="bet">Place your bet:</label>
+            <input type="number" id="bet" min="1" value="">
+            <button onclick="playHand()">Place Bet</button>
+          </div>
+          <div id="actionButtons" style="display:none;">
+            <button onclick="hit()">Hit</button>
+            <button onclick="stand()">Stand</button>
+            <button id="splitButton" onclick="handleSplit()" style="display:inline-block;">Split</button>
+            <button onclick="handleDoubleDown()">Double Down</button>
+          </div>          
+        </div>
+        <div id="gameResult"></div>
+      </div>
+      <div id="sidebar">
+        <div id="liveBetDisplay">
+          <h3>Current Bet</h3>
+          <p>$<span id="liveBetAmount">0</span></p>
+        </div>
+        <hr>
+        <div id="statsDisplay">
+          <h3>Statistics</h3>
+          <p>Total Games: <span id="totalGames">0</span></p>
+          <p>Wins: <span id="wins">0</span></p>
+          <p>Losses: <span id="losses">0</span></p>
+          <p>Pushes: <span id="pushes">0</span></p>
+          <p>Win Rate: <span id="winRate">0</span>%</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calculator Tab -->
+  <div id="calculator" class="tab" style="display:none;">
+    <h2>Basic Strategy Calculator</h2>
+    <div class="calculator-inputs">
+      <div class="input-group">
+        <label for="playerCard1">Your First Card: </label>
+        <select id="playerCard1">
+          <option value="">Select Card</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="10">Jack</option>
+          <option value="10">Queen</option>
+          <option value="10">King</option>
+          <option value="11">Ace</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="playerCard2">Your Second Card: </label>
+        <select id="playerCard2">
+          <option value="">Select Card</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="10">Jack</option>
+          <option value="10">Queen</option>
+          <option value="10">King</option>
+          <option value="11">Ace</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="dealerCard">Dealer's Up Card: </label>
+        <select id="dealerCard">
+          <option value="">Select Card</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="10">Jack</option>
+          <option value="10">Queen</option>
+          <option value="10">King</option>
+          <option value="11">Ace</option>
+        </select>
+      </div>
+      <button onclick="calculateBestMove()">Get Best Move</button>
+    </div>
+    <div id="bestMove" class="strategy-result"></div>
+  </div>
+
+  <!-- Rule Containers -->
+  <div id="blackjackRulesContainer">
+    <div class="rule-section">
+      <h2>Blackjack Rules</h2>
+      <ul>
+        <li>The objective is to get 21, or as close as possible without going over.</li>
+      </ul>
+    </div>
+    <div class="rule-section">
+      <h3>Game Setup</h3>
+      <ul>
+        <li>You place your bet, then receive your cards. Dealer's first card is face-up, second card is face-down until your turn ends.</li>
+      </ul>
+    </div>
+    <div class="rule-section">
+      <h3>Card Values</h3>
+      <ul>
+        <li>Number cards (2-10) are worth their face value.</li>
+        <li>Face cards (J, Q, K) are worth 10.</li>
+        <li>Aces can be 1 or 11.</li>
+      </ul>
+    </div>
+    <div class="rule-section">
+      <h3>Player Actions</h3>
+      <ul>
+        <li><strong>Hit:</strong> Draw another card.</li>
+        <li><strong>Stand:</strong> End your turn with your current total.</li>
+        <li><strong>Double Down:</strong> Double your bet, take one card, and stand.</li>
+        <li><strong>Split:</strong> If you have a pair, you can split into two hands.</li>
+      </ul>
+    </div>
+    <div class="rule-section">
+      <h3>Dealer Rules</h3>
+      <ul>
+        <li>Dealer hits on 16 or below, stands on 17 or above.</li>
+      </ul>
+    </div>
+    <div class="rule-section">
+      <h3>Winning Conditions</h3>
+      <ul>
+        <li>Beat the dealer without busting.</li>
+        <li>Dealer busts => you win (unless you bust first).</li>
+        <li>A tie is a push.</li>
+      </ul>
+    </div>
+    <div class="rule-section">
+      <p><strong>Note:</strong> Use the Strategy Calculator tab for recommended moves!</p>
+    </div>
+  </div>
+
+  <div id="strategyRulesContainer" style="display:none;">
+    <div class="rule-section">
+      <h2>Strategy Calculator Rules</h2>
+      <ul>
+        <li>The calculator evaluates your hand and the dealer's up card using an improved decision‐matrix derived from basic blackjack strategy.</li>
+        <li>For pairs, it recommends splitting if conditions are favorable.</li>
+        <li>For soft totals (hands containing an Ace), the Ace is counted as 11 unless it causes a bust.</li>
+        <li>For hard totals, the calculator examines the total versus the dealer’s card and provides a recommendation (hit, stand, or double down) along with detailed reasoning.</li>
+        <li>Always consider these recommendations within the context of standard blackjack rules.</li>
+      </ul>
+    </div>
+  </div>
+  
+  <div id="strategyAdvice"></div>
+  
+  <script src="blackjacksite.js"></script>
+</body>
+</html>
