@@ -390,8 +390,8 @@ function renderCardHTML(card, faceUp = true) {
     default: cardValueName = card.value;
   }
   const suitName = card.suit.toLowerCase();
-  const frontSrc = `../PortfolioImages/${cardValueName}_of_${suitName}.png`;
-  const backSrc = '../PortfolioImages/back_of_card.png';
+  const frontSrc = `BJImages/${cardValueName}_of_${suitName}.png`;
+  const backSrc = 'BJImages/back_of_card.png';
   return `
     <div class="card-container">
       <div class="card ${faceUp ? '' : 'is-flipped'}">
@@ -858,3 +858,4 @@ function showTab(tabName) {
     document.getElementById('bestMove').innerHTML = '';
   }
 }
+
