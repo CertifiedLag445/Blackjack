@@ -97,7 +97,7 @@ class Deck {
 //
 class BlackjackGame {
   constructor() {
-    this.currency = 1000000;
+    this.currency = 10000;
     this.deck = new Deck();
     this.playerHand = [];
     this.dealerHand = [];
